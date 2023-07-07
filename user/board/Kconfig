@@ -105,7 +105,7 @@ menu "On-chip Peripheral Drivers"
                 default n
             config BSP_USING_UART2
                 bool "Enable UART2"
-                default n
+                default y
 
             config BSP_UART2_RX_USING_DMA
                 bool "Enable UART2 RX DMA"
