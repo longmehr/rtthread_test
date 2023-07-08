@@ -513,9 +513,9 @@
               <FilePath>..\rtthread\components\drivers\misc\pin.c</FilePath>
             </File>
             <File>
-              <FileName>serial.c</FileName>
+              <FileName>serial_v2.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\rtthread\components\drivers\serial\serial.c</FilePath>
+              <FilePath>..\rtthread\components\drivers\serial\serial_v2.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -548,9 +548,9 @@
               <FilePath>..\libraries\HAL_Drivers\drv_gpio.c</FilePath>
             </File>
             <File>
-              <FileName>drv_usart.c</FileName>
+              <FileName>drv_usart_v2.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\libraries\HAL_Drivers\drv_usart.c</FilePath>
+              <FilePath>..\libraries\HAL_Drivers\drv_usart_v2.c</FilePath>
             </File>
           </Files>
         </Group>
