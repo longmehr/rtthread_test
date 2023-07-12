@@ -138,7 +138,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>__STDC_LIMIT_MACROS, RT_USING_ARMLIBC, STM32F103xE, USE_HAL_DRIVER, RT_USING_LIBC, __CLK_TCK=RT_TICK_PER_SECOND, __RTTHREAD__</Define>
               <Undefine></Undefine>
-              <IncludePath>..\libraries\HAL_Drivers\config;..\rtthread\libcpu\arm\common;..\rtthread\components\libc\compilers\common\extension;..\rtthread\libcpu\arm\cortex-m3;..\libraries\STM32F1xx_HAL\CMSIS\Device\ST\STM32F1xx\Include;..\libraries\HAL_Drivers\CMSIS\Include;applications;..\libraries\STM32F1xx_HAL\STM32F1xx_HAL_Driver\Inc;board\CubeMX_Config\Inc;board;..\rtthread\components\drivers\include;..\rtthread\components\libc\compilers\common\extension\fcntl\octal;..\rtthread\components\drivers\include;..\rtthread\components\finsh;..\rtthread\include;..\rtthread\components\libc\posix\io\stdio;..\rtthread\components\libc\posix\ipc;board\ports;..\rtthread\components\libc\posix\io\poll;..\rtthread\components\drivers\include;.;..\rtthread\components\libc\compilers\common\include;..\rtthread\components\drivers\include;..\libraries\HAL_Drivers</IncludePath>
+              <IncludePath>..\libraries\HAL_Drivers\config;..\rtthread\libcpu\arm\common;..\rtthread\components\libc\compilers\common\extension;..\rtthread\libcpu\arm\cortex-m3;..\libraries\STM32F1xx_HAL\CMSIS\Device\ST\STM32F1xx\Include;..\libraries\HAL_Drivers\CMSIS\Include;applications;..\libraries\STM32F1xx_HAL\STM32F1xx_HAL_Driver\Inc;board\CubeMX_Config\Inc;board;..\rtthread\components\drivers\include;..\rtthread\components\libc\compilers\common\extension\fcntl\octal;..\rtthread\components\drivers\include\drivers;..\rtthread\components\finsh;..\rtthread\include;..\rtthread\components\drivers\include;..\rtthread\components\libc\posix\io\stdio;..\rtthread\components\libc\posix\ipc;board\ports;..\rtthread\components\libc\posix\io\poll;..\rtthread\components\drivers\include;.;..\rtthread\components\libc\compilers\common\include;..\rtthread\components\drivers\include;..\libraries\HAL_Drivers</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -517,6 +517,11 @@
               <FileType>1</FileType>
               <FilePath>..\rtthread\components\drivers\serial\serial_v2.c</FilePath>
             </File>
+            <File>
+              <FileName>watchdog.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\rtthread\components\drivers\watchdog\watchdog.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -551,6 +556,11 @@
               <FileName>drv_usart_v2.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\libraries\HAL_Drivers\drv_usart_v2.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_wdt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\libraries\HAL_Drivers\drv_wdt.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -693,9 +703,19 @@
               <FilePath>..\libraries\STM32F1xx_HAL\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_uart.c</FilePath>
             </File>
             <File>
+              <FileName>stm32f1xx_hal_iwdg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\libraries\STM32F1xx_HAL\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_iwdg.c</FilePath>
+            </File>
+            <File>
               <FileName>stm32f1xx_hal.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\libraries\STM32F1xx_HAL\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f1xx_hal_wwdg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\libraries\STM32F1xx_HAL\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_wwdg.c</FilePath>
             </File>
             <File>
               <FileName>stm32f1xx_hal_cec.c</FileName>

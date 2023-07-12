@@ -9,41 +9,44 @@
  */
 
 #include <rtthread.h>
+#include <rtdevice.h>
+#include "board.h"
+#include <watchdog.h>
 
 #define DBG_TAG "main"
 #define DBG_LVL DBG_LOG
 #include <rtdbg.h>
-#include "board.h"
-//官方示例代码开始
-/*
- * 程序清单：这是一个 串口 设备使用例程
- * 例程导出了 uart_sample 命令到控制终端
- * 命令调用格式：uart_sample uart2
- * 命令解释：命令第二个参数是要使用的串口设备名称，为空则使用默认的串口设备
- * 程序功能：通过串口输出字符串"hello RT-Thread!"，然后错位输出输入的字符
-*/
 
-#include <rtthread.h>
+#define IWDG_DEVICE_NAME "wdt"
+static rt_device_t wdg_dev;
 
-#define SAMPLE_UART_NAME       "uart2"
-
-static rt_device_t serial;
-char str[] = "Hello RT-Thread!\r\n";
-struct serial_configure config = RT_SERIAL_CONFIG_DEFAULT;
-
+static void idle_hook(void)
+{
+    rt_device_control(wdg_dev, RT_DEVICE_CTRL_WDT_KEEPALIVE, NULL);
+    rt_kprintf("feed the dog! \n");
+}
 int main(void)
 {
-    // config.baud_rate = BAUD_RATE_9600;
-    serial = rt_device_find(SAMPLE_UART_NAME);
-    rt_device_open(serial, RT_DEVICE_FLAG_RX_NON_BLOCKING | RT_DEVICE_FLAG_TX_BLOCKING);
-    rt_device_control(serial, RT_DEVICE_CTRL_CONFIG, (void*)&config);
-    while(1)
+    rt_err_t res = RT_EOK;
+    rt_uint32_t timeout = 60;
+    wdg_dev = rt_device_find(IWDG_DEVICE_NAME);
+    if(!wdg_dev)
     {
-        rt_device_write(serial, 0, str, (sizeof(str) - 1));
-        rt_thread_mdelay(2000);
-        rt_device_write(serial, 0, "ok\r\n", 8);
-        rt_thread_mdelay(2000);
+        rt_kprintf("find %s failed! \n", IWDG_DEVICE_NAME);
+        return -RT_ERROR;
     }
-
-    //return RT_EOK;
+    res = rt_device_init(wdg_dev);
+    if (res != RT_EOK)
+    {
+        rt_kprintf("initialize %s failed!\n", IWDG_DEVICE_NAME);
+        return -RT_ERROR;
+    }
+    res = rt_device_control(wdg_dev, RT_DEVICE_CTRL_WDT_SET_TIMEOUT, &timeout);
+    if (res != RT_EOK)
+    {
+        rt_kprintf("set %s timeout failed!\n", IWDG_DEVICE_NAME);
+        return -RT_ERROR;
+    }
+    rt_thread_idle_sethook(idle_hook);
+    return res;
 }

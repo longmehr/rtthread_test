@@ -82,6 +82,7 @@
 #define RT_USING_SERIAL_V2
 #define RT_SERIAL_USING_DMA
 #define RT_USING_PIN
+#define RT_USING_WDT
 
 /* Using USB */
 
@@ -230,6 +231,7 @@
 #define BSP_USING_UART
 #define BSP_USING_UART1
 #define BSP_USING_UART2
+#define BSP_USING_WDT
 
 /* Board extended module Drivers */
 
