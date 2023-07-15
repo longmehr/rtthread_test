@@ -17,69 +17,42 @@
 #define DBG_LVL DBG_LOG
 #include <rtdbg.h>
 
-#define IWDG_DEVICE_NAME    "wdt"    /* 看门狗设备名称 */
-static rt_device_t wdg_dev;         /* 看门狗设备句柄 */
-static void idle_hook(void)
-{
-    /* 在空闲线程的回调函数里喂狗 */
-    rt_device_control(wdg_dev, RT_DEVICE_CTRL_WDT_KEEPALIVE, NULL);
-    rt_kprintf("feed the dog!\n ");
-}
-static int iwdg_sample()
-{
-    rt_err_t ret = RT_EOK;
-    rt_uint32_t timeout = 10;    /* 溢出时间 */
-    char device_name[RT_NAME_MAX];
-    /* 判断命令行参数是否给定了设备名称 */
-    // if (argc == 2)
-    // {
-    //     rt_strncpy(device_name, argv[1], RT_NAME_MAX);
-    // }
-    // else
-    // {
-        rt_strncpy(device_name, IWDG_DEVICE_NAME, RT_NAME_MAX);
-    // }
-    /* 根据设备名称查找看门狗设备，获取设备句柄 */
-    wdg_dev = rt_device_find(device_name);
-    if (!wdg_dev)
-    {
-        rt_kprintf("find %s failed!\n", device_name);
-        return RT_ERROR;
-    }
-    /* 初始化设备 */
-    ret = rt_device_init(wdg_dev);
-    if (ret != RT_EOK)
-    {
-        rt_kprintf("initialize %s failed!\n", device_name);
-        return RT_ERROR;
-    }
-    /* 设置看门狗溢出时间 */
-    ret = rt_device_control(wdg_dev, RT_DEVICE_CTRL_WDT_SET_TIMEOUT, &timeout);
-    if (ret != RT_EOK)
-    {
-        rt_kprintf("set %s timeout failed!\n", device_name);
-        return RT_ERROR;
-    }
-    
-    while (1)
-    {
-        idle_hook();
-        rt_thread_mdelay(5000);
-    }
-		/* 设置空闲线程回调函数 */
-    //rt_thread_idle_sethook(idle_hook);
-    //return ret;
-}
-/* 导出到 msh 命令列表中 */
-MSH_CMD_EXPORT(iwdg_sample, iwdg sample);
-
+#define WDT_KEEPALIVE
+#define WDT_TIMEOUT 10
+#define LED0_PIN    GET_PIN(B, 5)
 
 int main(void)
 {
-    int count = 1;
-    while (count++)
+    int count = 0;
+    rt_uint32_t wdt_timeout = WDT_TIMEOUT;
+    rt_device_t wdt_device = RT_NULL;
+    rt_pin_mode(LED0_PIN, PIN_MODE_OUTPUT);
+    rt_pin_write(LED0_PIN, PIN_HIGH);
+    wdt_device = rt_device_find("wdt");
+    if(wdt_device == RT_NULL)
+    {
+        rt_kprintf("can't find the wdt device! \n");
+        return -RT_ERROR;
+    }
+    rt_device_control(wdt_device, RT_DEVICE_CTRL_WDT_SET_TIMEOUT, (void*)&wdt_timeout);
+    rt_device_control(wdt_device, RT_DEVICE_CTRL_WDT_START, RT_NULL);
+    rt_kprintf("reduce the wdt timeout as [%02ds]\n",  WDT_TIMEOUT); 
+    #ifdef WDT_KEEPALIVE
+        rt_kprintf("refresh the wdt timeout.\n");
+    #endif
+    while (1)
      {
+        rt_pin_write(LED0_PIN, PIN_LOW);
+        rt_kprintf("Still living! (Time: %03ds)\n", count++);
         rt_thread_mdelay(1000);
+        // rt_pin_write(LED0_PIN, PIN_LOW);
+    #ifdef WDT_KEEPALIVE
+        if(count % 9 == 0)
+        {
+            rt_device_control(wdt_device, RT_DEVICE_CTRL_WDT_KEEPALIVE, RT_NULL);
+            rt_kprintf("Feed Dog! (Time: %03ds)\n", count++);
+        }
+    #endif
      }
-    return RT_EOK;
+    // return RT_EOK;
 }
